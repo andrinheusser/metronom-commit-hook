@@ -1,0 +1,97 @@
+#!/usr/bin/env python
+
+import sys
+import urllib
+import urllib2
+import subprocess
+import re
+
+
+def git(args):
+    args = ['git'] + args
+    git = subprocess.Popen(args, stdout=subprocess.PIPE)
+    details = git.stdout.read()
+    details = details.strip()
+    return details
+
+
+def get_config(key, default):
+    details = git(['config', '%s' % (key)])
+    if len(details) > 0:
+        return details
+    else:
+        return default
+
+
+def get_activity(name):
+    activities = {
+        "backend": 2,
+        "frontend": 3,
+        "verschiedenes": 81,
+        "fehlerbehebung": 146,
+        "dokumentation": 93,
+        "mobile": 147,
+        "seo": 5,
+        "suchmaschienenoptimierung": 5,
+        "datenhandling": 77,
+        "testen": 35,
+        "code review": 74,
+        "coaching": 74,
+    }
+    name = name.lower()
+    name = name.strip()
+    try:
+        return activities[name]
+    except KeyError:
+        print "Activity '%s' not recognized! Possible choices are: " % name
+        for activity in activities.keys():
+            print activity
+        sys.exit()
+
+
+def create_worklog(note, duration, activity):
+    api_path = 'api/worklog_create/'
+    data = {}
+    data['notes'] = note
+    data['hours'] = duration
+    data['activity'] = activity
+    data['apikey'] = API_KEY
+    data['job'] = JOB_ID
+    payload = urllib.urlencode(data)
+
+    url = BASE_URL + api_path + '?' + payload
+    request = urllib2.Request(url, payload)
+    response = urllib2.urlopen(request)
+    out = response.read()
+    print out
+
+
+BASE_URL = get_config('metronom.baseurl', 'http://metronom.feinheit.ch/')
+API_KEY = get_config('metronom.apikey', '')
+JOB_ID = get_config('metronom.job', '')
+
+if not API_KEY or not JOB_ID:
+    print """
+        Please provide your API Key and Job ID.
+
+        git config metronom.apikey <APIKEY>
+        git config metronom.job <jobid>
+
+        Thanks.
+    """
+    sys.exit()
+
+commit_message = git(['log',  '-l',  'HEAD']).split("\n")[4]
+
+occurences = [s.start() for s in re.finditer('#', commit_message)]
+if len(occurences) < 2:
+    sys.exit()
+
+commit = commit_message.split('#')
+note = commit[0].strip()
+duration = commit[1].strip()
+activity = commit[2]
+
+activity = get_activity(activity)
+
+create_worklog(note, duration, activity)
