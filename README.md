@@ -23,23 +23,23 @@ The Job/Project ID of the project you are working on.
 
 ## Usage
 
-The commit message is parsed, looking for this pattern: #<hours>#<activity>
+The commit message is parsed, looking for this pattern: <worklog>#<hours>#<activity>
 
 ### Examples
 
-git commit -m "Nubbel. #1.2#backend"
+git commit -m "a meaningful commit message/worklog. #1.2#backend"
 
 ### Available Activities
 
-*dokumentation
-*frontend
-*suchmaschienenoptimierung
-*verschiedenes
-*fehlerbehebung
-*seo
-*testen
-*backend
-*mobile
-*datenhandling
-*coaching
-*code review
+* dokumentation
+* frontend
+* suchmaschienenoptimierung
+* verschiedenes
+* fehlerbehebung
+* seo
+* testen
+* backend
+* mobile
+* datenhandling
+* coaching
+* code review
