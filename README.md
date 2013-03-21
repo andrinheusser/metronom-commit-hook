@@ -23,7 +23,7 @@ The Job/Project ID of the project you are working on.
 
 ## Usage
 
-The commit message is parsed, looking for this pattern: <worklog>#<hours>#<activity>
+The commit message is parsed, looking for this pattern: &lt;worklog&gt;#&lt;hours&gt;#&lt;activity&gt;
 
 ### Examples
 
