@@ -30,7 +30,7 @@ jobid = raw_input()
 
 print 'Copy the postcommit script to %s/.git/hooks/postcommit' % project_root
 #shell('cp postcommit %s/.git/hooks/postcommit' % project_root)
-shutil.copy2('postcommit', '%s/.git/hooks/postcommit' % project_root)
+shutil.copy2('post-commit', '%s/.git/hooks/post-commit' % project_root)
 os.chdir(project_root)
 print 'Configure the script...'
 shell('git config metronom.baseurl %s' % metronom_baseurl)
